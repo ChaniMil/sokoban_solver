@@ -1,0 +1,1339 @@
+MODULE main
+DEFINE m := 3 ; n := 5 ;
+VAR
+    dr: {r, l, u, d, s};
+	i: 0..m+(-1);
+	j: 0..n+(-1);
+  right: boolean;
+  left: boolean;
+  down: boolean;
+  up: boolean;
+b00: {wall, target, flr, mantrg, bx, man, bxtrg};
+b01: {wall, target, flr, mantrg, bx, man, bxtrg};
+b02: {wall, target, flr, mantrg, bx, man, bxtrg};
+b03: {wall, target, flr, mantrg, bx, man, bxtrg};
+b04: {wall, target, flr, mantrg, bx, man, bxtrg};
+b10: {wall, target, flr, mantrg, bx, man, bxtrg};
+b11: {wall, target, flr, mantrg, bx, man, bxtrg};
+b12: {wall, target, flr, mantrg, bx, man, bxtrg};
+b13: {wall, target, flr, mantrg, bx, man, bxtrg};
+b14: {wall, target, flr, mantrg, bx, man, bxtrg};
+b20: {wall, target, flr, mantrg, bx, man, bxtrg};
+b21: {wall, target, flr, mantrg, bx, man, bxtrg};
+b22: {wall, target, flr, mantrg, bx, man, bxtrg};
+b23: {wall, target, flr, mantrg, bx, man, bxtrg};
+b24: {wall, target, flr, mantrg, bx, man, bxtrg};
+
+ASSIGN
+	init(b00) := wall;
+	init(b01) := wall;
+	init(b02) := wall;
+	init(b03) := wall;
+	init(b04) := wall;
+	init(b10) := wall;
+	init(b11) := bx;
+	init(b12) := man;
+	init(b13) := target;
+	init(b14) := wall;
+	init(b20) := wall;
+	init(b21) := wall;
+	init(b22) := wall;
+	init(b23) := wall;
+	init(b24) := wall;
+	init(i) := 1;
+	init(j) := 2;
+	init(dr) := s;
+	init(left) := FALSE;
+	init(right) := FALSE;
+	init(down) := FALSE;
+	init(up) := FALSE;
+	 
+next(i) := case
+    next(dr) = u & i>0: i+(-1);
+    next(dr) = d & i<m+(-1): i+1;
+    TRUE: i;
+    esac;
+
+next(j) := case
+    next(dr) = l & j>0: j+(-1);
+    next(dr) = r & j<n+(-1): j+1;
+    TRUE: j;
+    esac;
+
+next(dr) := case
+    next(up) & next(down) & next(right) & next(left): {r, u, l, d};
+	next(up) & next(down) & next(right) & !next(left): {r, u, d};
+	next(up) & next(down) & !next(right) & next(left): {u, l, d};
+	next(up) & next(down) & !next(right) & !next(left): {u, d};
+	next(up) & !next(down) & next(right) & next(left): {r, u, l};
+	next(up) & !next(down) & next(right) & !next(left): {r, u};
+	next(up) & !next(down) & !next(right) & next(left): {u, l};
+	next(up) & !next(down) & !next(right) & !next(left): {u};
+	!next(up) & next(down) & next(right) & next(left): {r, l, d};
+	!next(up) & next(down) & next(right) & !next(left): {r, d};
+	!next(up) & next(down) & !next(right) & next(left): {l, d};
+	!next(up) & next(down) & !next(right) & !next(left): {d};
+	!next(up) & !next(down) & next(right) & next(left): {r, l};
+	!next(up) & !next(down) & next(right) & !next(left): {r};
+	!next(up) & !next(down) & !next(right) & next(left): {l};
+	TRUE: {s};
+esac;
+
+next(up):= case
+	i = 0 | i = 1: FALSE;
+	i = 1 & j = 1 & (b01 = flr | b01 = target): TRUE;
+	i = 1 & j = 2 & (b02 = flr | b02 = target): TRUE;
+	i = 1 & j = 3 & (b03 = flr | b03 = target): TRUE;
+	i = 1 & j = 4 & (b04 = flr | b04 = target): TRUE;
+	i = 2 & j = 1 & (b11 = flr | b11 = target): TRUE;
+	i = 2 & j = 1 & (b11 = bx | b11 = bxtrg) & (b01 != bx & b01 != bxtrg & b01 != wall): TRUE;
+	i = 2 & j = 2 & (b12 = flr | b12 = target): TRUE;
+	i = 2 & j = 2 & (b12 = bx | b12 = bxtrg) & (b02 != bx & b02 != bxtrg & b02 != wall): TRUE;
+	i = 2 & j = 3 & (b13 = flr | b13 = target): TRUE;
+	i = 2 & j = 3 & (b13 = bx | b13 = bxtrg) & (b03 != bx & b03 != bxtrg & b03 != wall): TRUE;
+	i = 2 & j = 4 & (b14 = flr | b14 = target): TRUE;
+	i = 2 & j = 4 & (b14 = bx | b14 = bxtrg) & (b04 != bx & b04 != bxtrg & b04 != wall): TRUE;
+	TRUE: FALSE;
+esac;
+next(down):= case
+	i = m+(-1): FALSE;
+	i = 1 & j = 1 & (b21 = flr | b21 = target): TRUE;
+	i = 1 & j = 2 & (b22 = flr | b22 = target): TRUE;
+	i = 1 & j = 3 & (b23 = flr | b23 = target): TRUE;
+	i = 1 & j = 4 & (b24 = flr | b24 = target): TRUE;
+	TRUE: FALSE;
+esac;
+next(right):= case
+	j = n+(-1): FALSE;
+	i = 1 & j = 1 & (b12 = flr | b12 = target): TRUE;
+	i = 1 & j = 1 & (b12 = bx | b12 = bxtrg) & (b13 != bx & b13 != bxtrg & b13 != wall): TRUE;
+	i = 1 & j = 2 & (b13 = flr | b13 = target): TRUE;
+	i = 1 & j = 2 & (b13 = bx | b13 = bxtrg) & (b14 != bx & b14 != bxtrg & b14 != wall): TRUE;
+	i = 1 & j = 3 & (b14 = flr | b14 = target): TRUE;
+	i = 2 & j = 1 & (b22 = flr | b22 = target): TRUE;
+	i = 2 & j = 1 & (b22 = bx | b22 = bxtrg) & (b23 != bx & b23 != bxtrg & b23 != wall): TRUE;
+	i = 2 & j = 2 & (b23 = flr | b23 = target): TRUE;
+	i = 2 & j = 2 & (b23 = bx | b23 = bxtrg) & (b24 != bx & b24 != bxtrg & b24 != wall): TRUE;
+	i = 2 & j = 3 & (b24 = flr | b24 = target): TRUE;
+	TRUE: FALSE;
+esac;
+next(left):= case
+	j = 0 | j = 1: FALSE;
+	i = 1 & j = 1 & (b10 = flr | b10 = target): TRUE;
+	i = 1 & j = 2 & (b11 = flr | b11 = target): TRUE;
+	i = 1 & j = 2 & (b11 = bx | b11 = bxtrg) & (b10 != bx & b10 != bxtrg & b10 != wall): TRUE;
+	i = 1 & j = 3 & (b12 = flr | b12 = target): TRUE;
+	i = 1 & j = 3 & (b12 = bx | b12 = bxtrg) & (b11 != bx & b11 != bxtrg & b11 != wall): TRUE;
+	i = 1 & j = 4 & (b13 = flr | b13 = target): TRUE;
+	i = 1 & j = 4 & (b13 = bx | b13 = bxtrg) & (b12 != bx & b12 != bxtrg & b12 != wall): TRUE;
+	i = 2 & j = 1 & (b20 = flr | b20 = target): TRUE;
+	i = 2 & j = 2 & (b21 = flr | b21 = target): TRUE;
+	i = 2 & j = 2 & (b21 = bx | b21 = bxtrg) & (b20 != bx & b20 != bxtrg & b20 != wall): TRUE;
+	i = 2 & j = 3 & (b22 = flr | b22 = target): TRUE;
+	i = 2 & j = 3 & (b22 = bx | b22 = bxtrg) & (b21 != bx & b21 != bxtrg & b21 != wall): TRUE;
+	i = 2 & j = 4 & (b23 = flr | b23 = target): TRUE;
+	i = 2 & j = 4 & (b23 = bx | b23 = bxtrg) & (b22 != bx & b22 != bxtrg & b22 != wall): TRUE;
+	TRUE: FALSE;
+esac;
+
+next(b00) := case
+	--floor to floor
+		next(dr) = r & (b00 = man & b01 =flr):flr;
+		next(dr) = d & (b00 = man & b10 =flr):flr;
+
+
+	--target to floor
+		next(dr) = r & (b00 = mantrg & b01 =flr): target;
+		next(dr) = d & (b00 = mantrg & b10 =flr): target;
+
+	--floor to target
+		next(dr) = r & (b00 = man & b01 = target):flr;
+		next(dr) = d & (b00 = man & b10 = target):flr;
+
+	--target to target
+		next(dr) = r & (b00 = mantrg & b01 = target): target;
+		next(dr) = d & (b00 = mantrg & b10 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = r & (b00 = man & b01 = bx) & (b02 =flr) & (0+2 < n):flr;
+		next(dr) = d & (b00 = man & b10 = bx) & (b20 =flr) & (0+2 < m):flr;
+
+	--floor to box on floor, target
+		next(dr) = r & (b00 = man & b01 = bx) & (b02 = target) & (0+2 < n):flr;
+		next(dr) = d & (b00 = man & b10 = bx) & (b20 = target) & (0+2 < m):flr;
+
+	--floor to box on target, floor
+		next(dr) = r & (b00 = man & b01 = bxtrg) & (b02 =flr) & (0+2 < n):flr;
+		next(dr) = d & (b00 = man & b10 = bxtrg) & (b20 =flr) & (0-2 < m):flr;
+
+	--floor to box on target, target
+		next(dr) = r & (b00 = man & b01 = bxtrg) & (b02 = target) & (0+2 < n):flr;
+		next(dr) = d & (b00 = man & b10 = bxtrg) & (b20 = target) & (0+2 < m):flr;
+
+	--target to box on floor, floor
+		next(dr) = r & (b00 = mantrg & b01 = bx) & (b02 =flr) & (0+2 < n): target;
+		next(dr) = d & (b00 = mantrg & b10 = bx) & (b20 =flr) & (0+2 < m): target;
+
+	--target to box on floor, target
+		next(dr) = r & (b00 = mantrg & b01 = bx) & (b02 = target) & (0+2 < n): target;
+		next(dr) = d & (b00 = mantrg & b10 = bx) & (b20 = target) & (0+2 < m): target;
+
+	--target to box on target, floor
+		next(dr) = r & (b00 = mantrg & b01 = bxtrg) & (b02 =flr) & (0+2 < n): target;
+		next(dr) = d & (b00 = mantrg & b10 = bxtrg) & (b20 =flr) & (0+2 < m): target;
+
+	--target to box on target, target
+		next(dr) = r & (b00 = mantrg & b01 = bxtrg) & (b02 = target) & (0+2 < n): target;
+		next(dr) = d & (b00 = mantrg & b10 = bxtrg) & (b20 = target) & (0+2 < m): target;
+
+    --man to floor
+        next(dr) = l & (b00 = flr & (b01 = man | b01 = mantrg)): man;
+        next(dr) = u & (b00 = flr & (b10 = man | b10 = mantrg)): man;
+
+    --box to floor
+        next(dr) = l & (b00 = flr & (b01 = bx | b01 = bxtrg)) & (b02 = man | b02 = mantrg): bx;
+        next(dr) = u & (b00 = flr & (b10 = bx | b10 = bxtrg)) & (b20 = man | b20 = mantrg): bx;
+
+    --man to target
+        next(dr) = l & (b00 = target & (b01 = man | b01 = mantrg)): mantrg;
+        next(dr) = u & (b00 = target & (b10 = man | b10 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = l & (b00 = target & (b01 = bx | b01 = bxtrg)) & (b02 = man | b02 = mantrg): bxtrg;
+        next(dr) = u & (b00 = target & (b10 = bx | b10 = bxtrg)) & (b20 = man | b20 = mantrg): bxtrg;
+
+    --man to box
+
+    --man to box on target
+
+    TRUE: b00;
+esac;
+next(b01) := case
+	--floor to floor
+		next(dr) = l & (b01 = man & b00 =flr):flr;
+		next(dr) = r & (b01 = man & b02 =flr):flr;
+		next(dr) = d & (b01 = man & b11 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b01 = mantrg & b00 =flr): target;
+		next(dr) = r & (b01 = mantrg & b02 =flr): target;
+		next(dr) = d & (b01 = mantrg & b11 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b01 = man & b00 = target):flr;
+		next(dr) = r & (b01 = man & b02 = target):flr;
+		next(dr) = d & (b01 = man & b11 = target):flr;
+
+	--target to target
+		next(dr) = l & (b01 = mantrg & b00 = target): target;
+		next(dr) = r & (b01 = mantrg & b02 = target): target;
+		next(dr) = d & (b01 = mantrg & b11 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = r & (b01 = man & b02 = bx) & (b03 =flr) & (1+2 < n):flr;
+		next(dr) = d & (b01 = man & b11 = bx) & (b21 =flr) & (0+2 < m):flr;
+
+	--floor to box on floor, target
+		next(dr) = r & (b01 = man & b02 = bx) & (b03 = target) & (1+2 < n):flr;
+		next(dr) = d & (b01 = man & b11 = bx) & (b21 = target) & (0+2 < m):flr;
+
+	--floor to box on target, floor
+		next(dr) = r & (b01 = man & b02 = bxtrg) & (b03 =flr) & (1+2 < n):flr;
+		next(dr) = d & (b01 = man & b11 = bxtrg) & (b21 =flr) & (0-2 < m):flr;
+
+	--floor to box on target, target
+		next(dr) = r & (b01 = man & b02 = bxtrg) & (b03 = target) & (1+2 < n):flr;
+		next(dr) = d & (b01 = man & b11 = bxtrg) & (b21 = target) & (0+2 < m):flr;
+
+	--target to box on floor, floor
+		next(dr) = r & (b01 = mantrg & b02 = bx) & (b03 =flr) & (1+2 < n): target;
+		next(dr) = d & (b01 = mantrg & b11 = bx) & (b21 =flr) & (0+2 < m): target;
+
+	--target to box on floor, target
+		next(dr) = r & (b01 = mantrg & b02 = bx) & (b03 = target) & (1+2 < n): target;
+		next(dr) = d & (b01 = mantrg & b11 = bx) & (b21 = target) & (0+2 < m): target;
+
+	--target to box on target, floor
+		next(dr) = r & (b01 = mantrg & b02 = bxtrg) & (b03 =flr) & (1+2 < n): target;
+		next(dr) = d & (b01 = mantrg & b11 = bxtrg) & (b21 =flr) & (0+2 < m): target;
+
+	--target to box on target, target
+		next(dr) = r & (b01 = mantrg & b02 = bxtrg) & (b03 = target) & (1+2 < n): target;
+		next(dr) = d & (b01 = mantrg & b11 = bxtrg) & (b21 = target) & (0+2 < m): target;
+
+    --man to floor
+        next(dr) = r & (b01 = flr & (b00 = man | b00 = mantrg)) : man;
+        next(dr) = l & (b01 = flr & (b02 = man | b02 = mantrg)): man;
+        next(dr) = u & (b01 = flr & (b11 = man | b11 = mantrg)): man;
+
+    --box to floor
+        next(dr) = l & (b01 = flr & (b02 = bx | b02 = bxtrg)) & (b03 = man | b03 = mantrg): bx;
+        next(dr) = u & (b01 = flr & (b11 = bx | b11 = bxtrg)) & (b21 = man | b21 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b01 = target & (b00 = man | b00 = mantrg)): mantrg;
+        next(dr) = l & (b01 = target & (b02 = man | b02 = mantrg)): mantrg;
+        next(dr) = u & (b01 = target & (b11 = man | b11 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = l & (b01 = target & (b02 = bx | b02 = bxtrg)) & (b03 = man | b03 = mantrg): bxtrg;
+        next(dr) = u & (b01 = target & (b11 = bx | b11 = bxtrg)) & (b21 = man | b21 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b01 = bx & (b00 = man | b00 = mantrg)) & (b02 = flr | b02 = target): man;
+        next(dr) = l & (b01 = bx & (b02 = man | b02 = mantrg)) & (b00 = flr | b00 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b01 = bxtrg & (b00 = man | b00 = mantrg)) & (b02 = flr | b02 = target): mantrg;
+        next(dr) = l & (b01 = bxtrg & (b02 = man | b02 = mantrg)) & (b00 = flr | b00 = target): mantrg;
+
+    TRUE: b01;
+esac;
+next(b02) := case
+	--floor to floor
+		next(dr) = l & (b02 = man & b01 =flr):flr;
+		next(dr) = r & (b02 = man & b03 =flr):flr;
+		next(dr) = d & (b02 = man & b12 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b02 = mantrg & b01 =flr): target;
+		next(dr) = r & (b02 = mantrg & b03 =flr): target;
+		next(dr) = d & (b02 = mantrg & b12 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b02 = man & b01 = target):flr;
+		next(dr) = r & (b02 = man & b03 = target):flr;
+		next(dr) = d & (b02 = man & b12 = target):flr;
+
+	--target to target
+		next(dr) = l & (b02 = mantrg & b01 = target): target;
+		next(dr) = r & (b02 = mantrg & b03 = target): target;
+		next(dr) = d & (b02 = mantrg & b12 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b02 = man & b01 = bx) & (b00 =flr) & (2-2 > 0):flr;
+		next(dr) = r & (b02 = man & b03 = bx) & (b04 =flr) & (2+2 < n):flr;
+		next(dr) = d & (b02 = man & b12 = bx) & (b22 =flr) & (0+2 < m):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b02 = man & b01 = bx) & (b00 = target) & (2-2 > 0):flr;
+		next(dr) = r & (b02 = man & b03 = bx) & (b04 = target) & (2+2 < n):flr;
+		next(dr) = d & (b02 = man & b12 = bx) & (b22 = target) & (0+2 < m):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b02 = man & b01 = bxtrg) & (b00 =flr) & (2-2 > 0):flr;
+		next(dr) = r & (b02 = man & b03 = bxtrg) & (b04 =flr) & (2+2 < n):flr;
+		next(dr) = d & (b02 = man & b12 = bxtrg) & (b22 =flr) & (0-2 < m):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b02 = man & b01 = bxtrg) & (b00 = target) & (2-2 > 0):flr;
+		next(dr) = r & (b02 = man & b03 = bxtrg) & (b04 = target) & (2+2 < n):flr;
+		next(dr) = d & (b02 = man & b12 = bxtrg) & (b22 = target) & (0+2 < m):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b02 = mantrg & b01 = bx) & (b00 =flr) & (2-2 > 0): target;
+		next(dr) = r & (b02 = mantrg & b03 = bx) & (b04 =flr) & (2+2 < n): target;
+		next(dr) = d & (b02 = mantrg & b12 = bx) & (b22 =flr) & (0+2 < m): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b02 = mantrg & b01 = bx) & (b00 = target) & (2-2 > 0): target;
+		next(dr) = r & (b02 = mantrg & b03 = bx) & (b04 = target) & (2+2 < n): target;
+		next(dr) = d & (b02 = mantrg & b12 = bx) & (b22 = target) & (0+2 < m): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b02 = mantrg & b01 = bxtrg) & (b00 =flr) & (2-2 > 0): target;
+		next(dr) = r & (b02 = mantrg & b03 = bxtrg) & (b04 =flr) & (2+2 < n): target;
+		next(dr) = d & (b02 = mantrg & b12 = bxtrg) & (b22 =flr) & (0+2 < m): target;
+
+	--target to box on target, target
+		next(dr) = l & (b02 = mantrg & b01 = bxtrg) & (b00 = target) & (2-2 > 0): target;
+		next(dr) = r & (b02 = mantrg & b03 = bxtrg) & (b04 = target) & (2+2 < n): target;
+		next(dr) = d & (b02 = mantrg & b12 = bxtrg) & (b22 = target) & (0+2 < m): target;
+
+    --man to floor
+        next(dr) = r & (b02 = flr & (b01 = man | b01 = mantrg)) : man;
+        next(dr) = l & (b02 = flr & (b03 = man | b03 = mantrg)): man;
+        next(dr) = u & (b02 = flr & (b12 = man | b12 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b02 = flr & (b01 = bx | b01 = bxtrg)) & (b00 = man | b00 = mantrg): bx;
+        next(dr) = l & (b02 = flr & (b03 = bx | b03 = bxtrg)) & (b04 = man | b04 = mantrg): bx;
+        next(dr) = u & (b02 = flr & (b12 = bx | b12 = bxtrg)) & (b22 = man | b22 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b02 = target & (b01 = man | b01 = mantrg)): mantrg;
+        next(dr) = l & (b02 = target & (b03 = man | b03 = mantrg)): mantrg;
+        next(dr) = u & (b02 = target & (b12 = man | b12 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b02 = target & (b01 = bx | b01 = bxtrg)) & (b00 = man | b00 = mantrg): bxtrg;
+        next(dr) = l & (b02 = target & (b03 = bx | b03 = bxtrg)) & (b04 = man | b04 = mantrg): bxtrg;
+        next(dr) = u & (b02 = target & (b12 = bx | b12 = bxtrg)) & (b22 = man | b22 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b02 = bx & (b01 = man | b01 = mantrg)) & (b03 = flr | b03 = target): man;
+        next(dr) = l & (b02 = bx & (b03 = man | b03 = mantrg)) & (b01 = flr | b01 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b02 = bxtrg & (b01 = man | b01 = mantrg)) & (b03 = flr | b03 = target): mantrg;
+        next(dr) = l & (b02 = bxtrg & (b03 = man | b03 = mantrg)) & (b01 = flr | b01 = target): mantrg;
+
+    TRUE: b02;
+esac;
+next(b03) := case
+	--floor to floor
+		next(dr) = l & (b03 = man & b02 =flr):flr;
+		next(dr) = r & (b03 = man & b04 =flr):flr;
+		next(dr) = d & (b03 = man & b13 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b03 = mantrg & b02 =flr): target;
+		next(dr) = r & (b03 = mantrg & b04 =flr): target;
+		next(dr) = d & (b03 = mantrg & b13 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b03 = man & b02 = target):flr;
+		next(dr) = r & (b03 = man & b04 = target):flr;
+		next(dr) = d & (b03 = man & b13 = target):flr;
+
+	--target to target
+		next(dr) = l & (b03 = mantrg & b02 = target): target;
+		next(dr) = r & (b03 = mantrg & b04 = target): target;
+		next(dr) = d & (b03 = mantrg & b13 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b03 = man & b02 = bx) & (b01 =flr) & (3-2 > 0):flr;
+		next(dr) = d & (b03 = man & b13 = bx) & (b23 =flr) & (0+2 < m):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b03 = man & b02 = bx) & (b01 = target) & (3-2 > 0):flr;
+		next(dr) = d & (b03 = man & b13 = bx) & (b23 = target) & (0+2 < m):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b03 = man & b02 = bxtrg) & (b01 =flr) & (3-2 > 0):flr;
+		next(dr) = d & (b03 = man & b13 = bxtrg) & (b23 =flr) & (0-2 < m):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b03 = man & b02 = bxtrg) & (b01 = target) & (3-2 > 0):flr;
+		next(dr) = d & (b03 = man & b13 = bxtrg) & (b23 = target) & (0+2 < m):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b03 = mantrg & b02 = bx) & (b01 =flr) & (3-2 > 0): target;
+		next(dr) = d & (b03 = mantrg & b13 = bx) & (b23 =flr) & (0+2 < m): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b03 = mantrg & b02 = bx) & (b01 = target) & (3-2 > 0): target;
+		next(dr) = d & (b03 = mantrg & b13 = bx) & (b23 = target) & (0+2 < m): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b03 = mantrg & b02 = bxtrg) & (b01 =flr) & (3-2 > 0): target;
+		next(dr) = d & (b03 = mantrg & b13 = bxtrg) & (b23 =flr) & (0+2 < m): target;
+
+	--target to box on target, target
+		next(dr) = l & (b03 = mantrg & b02 = bxtrg) & (b01 = target) & (3-2 > 0): target;
+		next(dr) = d & (b03 = mantrg & b13 = bxtrg) & (b23 = target) & (0+2 < m): target;
+
+    --man to floor
+        next(dr) = r & (b03 = flr & (b02 = man | b02 = mantrg)) : man;
+        next(dr) = l & (b03 = flr & (b04 = man | b04 = mantrg)): man;
+        next(dr) = u & (b03 = flr & (b13 = man | b13 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b03 = flr & (b02 = bx | b02 = bxtrg)) & (b01 = man | b01 = mantrg): bx;
+        next(dr) = u & (b03 = flr & (b13 = bx | b13 = bxtrg)) & (b23 = man | b23 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b03 = target & (b02 = man | b02 = mantrg)): mantrg;
+        next(dr) = l & (b03 = target & (b04 = man | b04 = mantrg)): mantrg;
+        next(dr) = u & (b03 = target & (b13 = man | b13 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b03 = target & (b02 = bx | b02 = bxtrg)) & (b01 = man | b01 = mantrg): bxtrg;
+        next(dr) = u & (b03 = target & (b13 = bx | b13 = bxtrg)) & (b23 = man | b23 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b03 = bx & (b02 = man | b02 = mantrg)) & (b04 = flr | b04 = target): man;
+        next(dr) = l & (b03 = bx & (b04 = man | b04 = mantrg)) & (b02 = flr | b02 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b03 = bxtrg & (b02 = man | b02 = mantrg)) & (b04 = flr | b04 = target): mantrg;
+        next(dr) = l & (b03 = bxtrg & (b04 = man | b04 = mantrg)) & (b02 = flr | b02 = target): mantrg;
+
+    TRUE: b03;
+esac;
+next(b04) := case
+	--floor to floor
+		next(dr) = l & (b04 = man & b03 =flr):flr;
+		next(dr) = d & (b04 = man & b14 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b04 = mantrg & b03 =flr): target;
+		next(dr) = d & (b04 = mantrg & b14 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b04 = man & b03 = target):flr;
+		next(dr) = d & (b04 = man & b14 = target):flr;
+
+	--target to target
+		next(dr) = l & (b04 = mantrg & b03 = target): target;
+		next(dr) = d & (b04 = mantrg & b14 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b04 = man & b03 = bx) & (b02 =flr) & (4-2 > 0):flr;
+		next(dr) = d & (b04 = man & b14 = bx) & (b24 =flr) & (0+2 < m):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b04 = man & b03 = bx) & (b02 = target) & (4-2 > 0):flr;
+		next(dr) = d & (b04 = man & b14 = bx) & (b24 = target) & (0+2 < m):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b04 = man & b03 = bxtrg) & (b02 =flr) & (4-2 > 0):flr;
+		next(dr) = d & (b04 = man & b14 = bxtrg) & (b24 =flr) & (0-2 < m):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b04 = man & b03 = bxtrg) & (b02 = target) & (4-2 > 0):flr;
+		next(dr) = d & (b04 = man & b14 = bxtrg) & (b24 = target) & (0+2 < m):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b04 = mantrg & b03 = bx) & (b02 =flr) & (4-2 > 0): target;
+		next(dr) = d & (b04 = mantrg & b14 = bx) & (b24 =flr) & (0+2 < m): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b04 = mantrg & b03 = bx) & (b02 = target) & (4-2 > 0): target;
+		next(dr) = d & (b04 = mantrg & b14 = bx) & (b24 = target) & (0+2 < m): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b04 = mantrg & b03 = bxtrg) & (b02 =flr) & (4-2 > 0): target;
+		next(dr) = d & (b04 = mantrg & b14 = bxtrg) & (b24 =flr) & (0+2 < m): target;
+
+	--target to box on target, target
+		next(dr) = l & (b04 = mantrg & b03 = bxtrg) & (b02 = target) & (4-2 > 0): target;
+		next(dr) = d & (b04 = mantrg & b14 = bxtrg) & (b24 = target) & (0+2 < m): target;
+
+    --man to floor
+        next(dr) = r & (b04 = flr & (b03 = man | b03 = mantrg)) : man;
+        next(dr) = u & (b04 = flr & (b14 = man | b14 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b04 = flr & (b03 = bx | b03 = bxtrg)) & (b02 = man | b02 = mantrg): bx;
+        next(dr) = u & (b04 = flr & (b14 = bx | b14 = bxtrg)) & (b24 = man | b24 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b04 = target & (b03 = man | b03 = mantrg)): mantrg;
+        next(dr) = u & (b04 = target & (b14 = man | b14 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b04 = target & (b03 = bx | b03 = bxtrg)) & (b02 = man | b02 = mantrg): bxtrg;
+        next(dr) = u & (b04 = target & (b14 = bx | b14 = bxtrg)) & (b24 = man | b24 = mantrg): bxtrg;
+
+    --man to box
+
+    --man to box on target
+
+    TRUE: b04;
+esac;
+next(b10) := case
+	--floor to floor
+		next(dr) = r & (b10 = man & b11 =flr):flr;
+		next(dr) = u & (b10 = man & b00 =flr):flr;
+		next(dr) = d & (b10 = man & b20 =flr):flr;
+
+
+	--target to floor
+		next(dr) = r & (b10 = mantrg & b11 =flr): target;
+		next(dr) = u & (b10 = mantrg & b00 =flr): target;
+		next(dr) = d & (b10 = mantrg & b20 =flr): target;
+
+	--floor to target
+		next(dr) = r & (b10 = man & b11 = target):flr;
+		next(dr) = u & (b10 = man & b00 = target):flr;
+		next(dr) = d & (b10 = man & b20 = target):flr;
+
+	--target to target
+		next(dr) = r & (b10 = mantrg & b11 = target): target;
+		next(dr) = u & (b10 = mantrg & b00 = target): target;
+		next(dr) = d & (b10 = mantrg & b20 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = r & (b10 = man & b11 = bx) & (b12 =flr) & (0+2 < n):flr;
+
+	--floor to box on floor, target
+		next(dr) = r & (b10 = man & b11 = bx) & (b12 = target) & (0+2 < n):flr;
+
+	--floor to box on target, floor
+		next(dr) = r & (b10 = man & b11 = bxtrg) & (b12 =flr) & (0+2 < n):flr;
+
+	--floor to box on target, target
+		next(dr) = r & (b10 = man & b11 = bxtrg) & (b12 = target) & (0+2 < n):flr;
+
+	--target to box on floor, floor
+		next(dr) = r & (b10 = mantrg & b11 = bx) & (b12 =flr) & (0+2 < n): target;
+
+	--target to box on floor, target
+		next(dr) = r & (b10 = mantrg & b11 = bx) & (b12 = target) & (0+2 < n): target;
+
+	--target to box on target, floor
+		next(dr) = r & (b10 = mantrg & b11 = bxtrg) & (b12 =flr) & (0+2 < n): target;
+
+	--target to box on target, target
+		next(dr) = r & (b10 = mantrg & b11 = bxtrg) & (b12 = target) & (0+2 < n): target;
+
+    --man to floor
+        next(dr) = l & (b10 = flr & (b11 = man | b11 = mantrg)): man;
+        next(dr) = d & (b10 = flr & (b00 = man | b00 = mantrg)): man;
+        next(dr) = u & (b10 = flr & (b20 = man | b20 = mantrg)): man;
+
+    --box to floor
+        next(dr) = l & (b10 = flr & (b11 = bx | b11 = bxtrg)) & (b12 = man | b12 = mantrg): bx;
+
+    --man to target
+        next(dr) = l & (b10 = target & (b11 = man | b11 = mantrg)): mantrg;
+        next(dr) = d & (b10 = target & (b00 = man | b00 = mantrg)): mantrg;
+        next(dr) = u & (b10 = target & (b20 = man | b20 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = l & (b10 = target & (b11 = bx | b11 = bxtrg)) & (b12 = man | b12 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = d & (b10 = bx & (b00 = man | b00 = mantrg)) & (b20 = flr | b20 = target): man;
+        next(dr) = u & (b10 = bx & (b20 = man | b20 = mantrg)) & (b00 = flr | b00 = target): man;
+
+    --man to box on target
+        next(dr) = d & (b10 = bxtrg & (b00 = man | b00 = mantrg)) & (b20 = flr | b20 = target): mantrg;
+        next(dr) = u & (b10 = bxtrg & (b20 = man | b20 = mantrg)) & (b00 = flr | b00 = target): mantrg;
+
+    TRUE: b10;
+esac;
+next(b11) := case
+	--floor to floor
+		next(dr) = l & (b11 = man & b10 =flr):flr;
+		next(dr) = r & (b11 = man & b12 =flr):flr;
+		next(dr) = u & (b11 = man & b01 =flr):flr;
+		next(dr) = d & (b11 = man & b21 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b11 = mantrg & b10 =flr): target;
+		next(dr) = r & (b11 = mantrg & b12 =flr): target;
+		next(dr) = u & (b11 = mantrg & b01 =flr): target;
+		next(dr) = d & (b11 = mantrg & b21 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b11 = man & b10 = target):flr;
+		next(dr) = r & (b11 = man & b12 = target):flr;
+		next(dr) = u & (b11 = man & b01 = target):flr;
+		next(dr) = d & (b11 = man & b21 = target):flr;
+
+	--target to target
+		next(dr) = l & (b11 = mantrg & b10 = target): target;
+		next(dr) = r & (b11 = mantrg & b12 = target): target;
+		next(dr) = u & (b11 = mantrg & b01 = target): target;
+		next(dr) = d & (b11 = mantrg & b21 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = r & (b11 = man & b12 = bx) & (b13 =flr) & (1+2 < n):flr;
+
+	--floor to box on floor, target
+		next(dr) = r & (b11 = man & b12 = bx) & (b13 = target) & (1+2 < n):flr;
+
+	--floor to box on target, floor
+		next(dr) = r & (b11 = man & b12 = bxtrg) & (b13 =flr) & (1+2 < n):flr;
+
+	--floor to box on target, target
+		next(dr) = r & (b11 = man & b12 = bxtrg) & (b13 = target) & (1+2 < n):flr;
+
+	--target to box on floor, floor
+		next(dr) = r & (b11 = mantrg & b12 = bx) & (b13 =flr) & (1+2 < n): target;
+
+	--target to box on floor, target
+		next(dr) = r & (b11 = mantrg & b12 = bx) & (b13 = target) & (1+2 < n): target;
+
+	--target to box on target, floor
+		next(dr) = r & (b11 = mantrg & b12 = bxtrg) & (b13 =flr) & (1+2 < n): target;
+
+	--target to box on target, target
+		next(dr) = r & (b11 = mantrg & b12 = bxtrg) & (b13 = target) & (1+2 < n): target;
+
+    --man to floor
+        next(dr) = r & (b11 = flr & (b10 = man | b10 = mantrg)) : man;
+        next(dr) = l & (b11 = flr & (b12 = man | b12 = mantrg)): man;
+        next(dr) = d & (b11 = flr & (b01 = man | b01 = mantrg)): man;
+        next(dr) = u & (b11 = flr & (b21 = man | b21 = mantrg)): man;
+
+    --box to floor
+        next(dr) = l & (b11 = flr & (b12 = bx | b12 = bxtrg)) & (b13 = man | b13 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b11 = target & (b10 = man | b10 = mantrg)): mantrg;
+        next(dr) = l & (b11 = target & (b12 = man | b12 = mantrg)): mantrg;
+        next(dr) = d & (b11 = target & (b01 = man | b01 = mantrg)): mantrg;
+        next(dr) = u & (b11 = target & (b21 = man | b21 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = l & (b11 = target & (b12 = bx | b12 = bxtrg)) & (b13 = man | b13 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b11 = bx & (b10 = man | b10 = mantrg)) & (b12 = flr | b12 = target): man;
+        next(dr) = l & (b11 = bx & (b12 = man | b12 = mantrg)) & (b10 = flr | b10 = target): man;
+        next(dr) = d & (b11 = bx & (b01 = man | b01 = mantrg)) & (b21 = flr | b21 = target): man;
+        next(dr) = u & (b11 = bx & (b21 = man | b21 = mantrg)) & (b01 = flr | b01 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b11 = bxtrg & (b10 = man | b10 = mantrg)) & (b12 = flr | b12 = target): mantrg;
+        next(dr) = l & (b11 = bxtrg & (b12 = man | b12 = mantrg)) & (b10 = flr | b10 = target): mantrg;
+        next(dr) = d & (b11 = bxtrg & (b01 = man | b01 = mantrg)) & (b21 = flr | b21 = target): mantrg;
+        next(dr) = u & (b11 = bxtrg & (b21 = man | b21 = mantrg)) & (b01 = flr | b01 = target): mantrg;
+
+    TRUE: b11;
+esac;
+next(b12) := case
+	--floor to floor
+		next(dr) = l & (b12 = man & b11 =flr):flr;
+		next(dr) = r & (b12 = man & b13 =flr):flr;
+		next(dr) = u & (b12 = man & b02 =flr):flr;
+		next(dr) = d & (b12 = man & b22 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b12 = mantrg & b11 =flr): target;
+		next(dr) = r & (b12 = mantrg & b13 =flr): target;
+		next(dr) = u & (b12 = mantrg & b02 =flr): target;
+		next(dr) = d & (b12 = mantrg & b22 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b12 = man & b11 = target):flr;
+		next(dr) = r & (b12 = man & b13 = target):flr;
+		next(dr) = u & (b12 = man & b02 = target):flr;
+		next(dr) = d & (b12 = man & b22 = target):flr;
+
+	--target to target
+		next(dr) = l & (b12 = mantrg & b11 = target): target;
+		next(dr) = r & (b12 = mantrg & b13 = target): target;
+		next(dr) = u & (b12 = mantrg & b02 = target): target;
+		next(dr) = d & (b12 = mantrg & b22 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b12 = man & b11 = bx) & (b10 =flr) & (2-2 > 0):flr;
+		next(dr) = r & (b12 = man & b13 = bx) & (b14 =flr) & (2+2 < n):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b12 = man & b11 = bx) & (b10 = target) & (2-2 > 0):flr;
+		next(dr) = r & (b12 = man & b13 = bx) & (b14 = target) & (2+2 < n):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b12 = man & b11 = bxtrg) & (b10 =flr) & (2-2 > 0):flr;
+		next(dr) = r & (b12 = man & b13 = bxtrg) & (b14 =flr) & (2+2 < n):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b12 = man & b11 = bxtrg) & (b10 = target) & (2-2 > 0):flr;
+		next(dr) = r & (b12 = man & b13 = bxtrg) & (b14 = target) & (2+2 < n):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b12 = mantrg & b11 = bx) & (b10 =flr) & (2-2 > 0): target;
+		next(dr) = r & (b12 = mantrg & b13 = bx) & (b14 =flr) & (2+2 < n): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b12 = mantrg & b11 = bx) & (b10 = target) & (2-2 > 0): target;
+		next(dr) = r & (b12 = mantrg & b13 = bx) & (b14 = target) & (2+2 < n): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b12 = mantrg & b11 = bxtrg) & (b10 =flr) & (2-2 > 0): target;
+		next(dr) = r & (b12 = mantrg & b13 = bxtrg) & (b14 =flr) & (2+2 < n): target;
+
+	--target to box on target, target
+		next(dr) = l & (b12 = mantrg & b11 = bxtrg) & (b10 = target) & (2-2 > 0): target;
+		next(dr) = r & (b12 = mantrg & b13 = bxtrg) & (b14 = target) & (2+2 < n): target;
+
+    --man to floor
+        next(dr) = r & (b12 = flr & (b11 = man | b11 = mantrg)) : man;
+        next(dr) = l & (b12 = flr & (b13 = man | b13 = mantrg)): man;
+        next(dr) = d & (b12 = flr & (b02 = man | b02 = mantrg)): man;
+        next(dr) = u & (b12 = flr & (b22 = man | b22 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b12 = flr & (b11 = bx | b11 = bxtrg)) & (b10 = man | b10 = mantrg): bx;
+        next(dr) = l & (b12 = flr & (b13 = bx | b13 = bxtrg)) & (b14 = man | b14 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b12 = target & (b11 = man | b11 = mantrg)): mantrg;
+        next(dr) = l & (b12 = target & (b13 = man | b13 = mantrg)): mantrg;
+        next(dr) = d & (b12 = target & (b02 = man | b02 = mantrg)): mantrg;
+        next(dr) = u & (b12 = target & (b22 = man | b22 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b12 = target & (b11 = bx | b11 = bxtrg)) & (b10 = man | b10 = mantrg): bxtrg;
+        next(dr) = l & (b12 = target & (b13 = bx | b13 = bxtrg)) & (b14 = man | b14 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b12 = bx & (b11 = man | b11 = mantrg)) & (b13 = flr | b13 = target): man;
+        next(dr) = l & (b12 = bx & (b13 = man | b13 = mantrg)) & (b11 = flr | b11 = target): man;
+        next(dr) = d & (b12 = bx & (b02 = man | b02 = mantrg)) & (b22 = flr | b22 = target): man;
+        next(dr) = u & (b12 = bx & (b22 = man | b22 = mantrg)) & (b02 = flr | b02 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b12 = bxtrg & (b11 = man | b11 = mantrg)) & (b13 = flr | b13 = target): mantrg;
+        next(dr) = l & (b12 = bxtrg & (b13 = man | b13 = mantrg)) & (b11 = flr | b11 = target): mantrg;
+        next(dr) = d & (b12 = bxtrg & (b02 = man | b02 = mantrg)) & (b22 = flr | b22 = target): mantrg;
+        next(dr) = u & (b12 = bxtrg & (b22 = man | b22 = mantrg)) & (b02 = flr | b02 = target): mantrg;
+
+    TRUE: b12;
+esac;
+next(b13) := case
+	--floor to floor
+		next(dr) = l & (b13 = man & b12 =flr):flr;
+		next(dr) = r & (b13 = man & b14 =flr):flr;
+		next(dr) = u & (b13 = man & b03 =flr):flr;
+		next(dr) = d & (b13 = man & b23 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b13 = mantrg & b12 =flr): target;
+		next(dr) = r & (b13 = mantrg & b14 =flr): target;
+		next(dr) = u & (b13 = mantrg & b03 =flr): target;
+		next(dr) = d & (b13 = mantrg & b23 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b13 = man & b12 = target):flr;
+		next(dr) = r & (b13 = man & b14 = target):flr;
+		next(dr) = u & (b13 = man & b03 = target):flr;
+		next(dr) = d & (b13 = man & b23 = target):flr;
+
+	--target to target
+		next(dr) = l & (b13 = mantrg & b12 = target): target;
+		next(dr) = r & (b13 = mantrg & b14 = target): target;
+		next(dr) = u & (b13 = mantrg & b03 = target): target;
+		next(dr) = d & (b13 = mantrg & b23 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b13 = man & b12 = bx) & (b11 =flr) & (3-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b13 = man & b12 = bx) & (b11 = target) & (3-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b13 = man & b12 = bxtrg) & (b11 =flr) & (3-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b13 = man & b12 = bxtrg) & (b11 = target) & (3-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b13 = mantrg & b12 = bx) & (b11 =flr) & (3-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b13 = mantrg & b12 = bx) & (b11 = target) & (3-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b13 = mantrg & b12 = bxtrg) & (b11 =flr) & (3-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = l & (b13 = mantrg & b12 = bxtrg) & (b11 = target) & (3-2 > 0): target;
+
+    --man to floor
+        next(dr) = r & (b13 = flr & (b12 = man | b12 = mantrg)) : man;
+        next(dr) = l & (b13 = flr & (b14 = man | b14 = mantrg)): man;
+        next(dr) = d & (b13 = flr & (b03 = man | b03 = mantrg)): man;
+        next(dr) = u & (b13 = flr & (b23 = man | b23 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b13 = flr & (b12 = bx | b12 = bxtrg)) & (b11 = man | b11 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b13 = target & (b12 = man | b12 = mantrg)): mantrg;
+        next(dr) = l & (b13 = target & (b14 = man | b14 = mantrg)): mantrg;
+        next(dr) = d & (b13 = target & (b03 = man | b03 = mantrg)): mantrg;
+        next(dr) = u & (b13 = target & (b23 = man | b23 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b13 = target & (b12 = bx | b12 = bxtrg)) & (b11 = man | b11 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b13 = bx & (b12 = man | b12 = mantrg)) & (b14 = flr | b14 = target): man;
+        next(dr) = l & (b13 = bx & (b14 = man | b14 = mantrg)) & (b12 = flr | b12 = target): man;
+        next(dr) = d & (b13 = bx & (b03 = man | b03 = mantrg)) & (b23 = flr | b23 = target): man;
+        next(dr) = u & (b13 = bx & (b23 = man | b23 = mantrg)) & (b03 = flr | b03 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b13 = bxtrg & (b12 = man | b12 = mantrg)) & (b14 = flr | b14 = target): mantrg;
+        next(dr) = l & (b13 = bxtrg & (b14 = man | b14 = mantrg)) & (b12 = flr | b12 = target): mantrg;
+        next(dr) = d & (b13 = bxtrg & (b03 = man | b03 = mantrg)) & (b23 = flr | b23 = target): mantrg;
+        next(dr) = u & (b13 = bxtrg & (b23 = man | b23 = mantrg)) & (b03 = flr | b03 = target): mantrg;
+
+    TRUE: b13;
+esac;
+next(b14) := case
+	--floor to floor
+		next(dr) = l & (b14 = man & b13 =flr):flr;
+		next(dr) = u & (b14 = man & b04 =flr):flr;
+		next(dr) = d & (b14 = man & b24 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b14 = mantrg & b13 =flr): target;
+		next(dr) = u & (b14 = mantrg & b04 =flr): target;
+		next(dr) = d & (b14 = mantrg & b24 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b14 = man & b13 = target):flr;
+		next(dr) = u & (b14 = man & b04 = target):flr;
+		next(dr) = d & (b14 = man & b24 = target):flr;
+
+	--target to target
+		next(dr) = l & (b14 = mantrg & b13 = target): target;
+		next(dr) = u & (b14 = mantrg & b04 = target): target;
+		next(dr) = d & (b14 = mantrg & b24 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b14 = man & b13 = bx) & (b12 =flr) & (4-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b14 = man & b13 = bx) & (b12 = target) & (4-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b14 = man & b13 = bxtrg) & (b12 =flr) & (4-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b14 = man & b13 = bxtrg) & (b12 = target) & (4-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b14 = mantrg & b13 = bx) & (b12 =flr) & (4-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b14 = mantrg & b13 = bx) & (b12 = target) & (4-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b14 = mantrg & b13 = bxtrg) & (b12 =flr) & (4-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = l & (b14 = mantrg & b13 = bxtrg) & (b12 = target) & (4-2 > 0): target;
+
+    --man to floor
+        next(dr) = r & (b14 = flr & (b13 = man | b13 = mantrg)) : man;
+        next(dr) = d & (b14 = flr & (b04 = man | b04 = mantrg)): man;
+        next(dr) = u & (b14 = flr & (b24 = man | b24 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b14 = flr & (b13 = bx | b13 = bxtrg)) & (b12 = man | b12 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b14 = target & (b13 = man | b13 = mantrg)): mantrg;
+        next(dr) = d & (b14 = target & (b04 = man | b04 = mantrg)): mantrg;
+        next(dr) = u & (b14 = target & (b24 = man | b24 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b14 = target & (b13 = bx | b13 = bxtrg)) & (b12 = man | b12 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = d & (b14 = bx & (b04 = man | b04 = mantrg)) & (b24 = flr | b24 = target): man;
+        next(dr) = u & (b14 = bx & (b24 = man | b24 = mantrg)) & (b04 = flr | b04 = target): man;
+
+    --man to box on target
+        next(dr) = d & (b14 = bxtrg & (b04 = man | b04 = mantrg)) & (b24 = flr | b24 = target): mantrg;
+        next(dr) = u & (b14 = bxtrg & (b24 = man | b24 = mantrg)) & (b04 = flr | b04 = target): mantrg;
+
+    TRUE: b14;
+esac;
+next(b20) := case
+	--floor to floor
+		next(dr) = r & (b20 = man & b21 =flr):flr;
+		next(dr) = u & (b20 = man & b10 =flr):flr;
+
+
+	--target to floor
+		next(dr) = r & (b20 = mantrg & b21 =flr): target;
+		next(dr) = u & (b20 = mantrg & b10 =flr): target;
+
+	--floor to target
+		next(dr) = r & (b20 = man & b21 = target):flr;
+		next(dr) = u & (b20 = man & b10 = target):flr;
+
+	--target to target
+		next(dr) = r & (b20 = mantrg & b21 = target): target;
+		next(dr) = u & (b20 = mantrg & b10 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = r & (b20 = man & b21 = bx) & (b22 =flr) & (0+2 < n):flr;
+		next(dr) = u & (b20 = man & b10 = bx) & (b00 =flr) & (2-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = r & (b20 = man & b21 = bx) & (b22 = target) & (0+2 < n):flr;
+		next(dr) = u & (b20 = man & b10 = bx) & (b00 = target) & (2-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = r & (b20 = man & b21 = bxtrg) & (b22 =flr) & (0+2 < n):flr;
+		next(dr) = u & (b20 = man & b10 = bxtrg) & (b00 =flr) & (2-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = r & (b20 = man & b21 = bxtrg) & (b22 = target) & (0+2 < n):flr;
+		next(dr) = u & (b20 = man & b10 = bxtrg) & (b00 = target) & (2-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = r & (b20 = mantrg & b21 = bx) & (b22 =flr) & (0+2 < n): target;
+		next(dr) = u & (b20 = mantrg & b10 = bx) & (b00 =flr) & (2-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = r & (b20 = mantrg & b21 = bx) & (b22 = target) & (0+2 < n): target;
+		next(dr) = u & (b20 = mantrg & b10 = bx) & (b00 = target) & (2-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = r & (b20 = mantrg & b21 = bxtrg) & (b22 =flr) & (0+2 < n): target;
+		next(dr) = u & (b20 = mantrg & b10 = bxtrg) & (b00 =flr) & (2-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = r & (b20 = mantrg & b21 = bxtrg) & (b22 = target) & (0+2 < n): target;
+		next(dr) = u & (b20 = mantrg & b10 = bxtrg) & (b00 = target) & (2-2 > 0): target;
+
+    --man to floor
+        next(dr) = l & (b20 = flr & (b21 = man | b21 = mantrg)): man;
+        next(dr) = d & (b20 = flr & (b10 = man | b10 = mantrg)): man;
+
+    --box to floor
+        next(dr) = l & (b20 = flr & (b21 = bx | b21 = bxtrg)) & (b22 = man | b22 = mantrg): bx;
+        next(dr) = d & (b20 = flr & (b10 = bx | b10 = bxtrg)) & (b00 = man | b00 = mantrg): bx;
+
+    --man to target
+        next(dr) = l & (b20 = target & (b21 = man | b21 = mantrg)): mantrg;
+        next(dr) = d & (b20 = target & (b10 = man | b10 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = l & (b20 = target & (b21 = bx | b21 = bxtrg)) & (b22 = man | b22 = mantrg): bxtrg;
+        next(dr) = d & (b20 = target & (b10 = bx | b10 = bxtrg)) & (b00 = man | b00 = mantrg): bxtrg;
+
+    --man to box
+
+    --man to box on target
+
+    TRUE: b20;
+esac;
+next(b21) := case
+	--floor to floor
+		next(dr) = l & (b21 = man & b20 =flr):flr;
+		next(dr) = r & (b21 = man & b22 =flr):flr;
+		next(dr) = u & (b21 = man & b11 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b21 = mantrg & b20 =flr): target;
+		next(dr) = r & (b21 = mantrg & b22 =flr): target;
+		next(dr) = u & (b21 = mantrg & b11 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b21 = man & b20 = target):flr;
+		next(dr) = r & (b21 = man & b22 = target):flr;
+		next(dr) = u & (b21 = man & b11 = target):flr;
+
+	--target to target
+		next(dr) = l & (b21 = mantrg & b20 = target): target;
+		next(dr) = r & (b21 = mantrg & b22 = target): target;
+		next(dr) = u & (b21 = mantrg & b11 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = r & (b21 = man & b22 = bx) & (b23 =flr) & (1+2 < n):flr;
+		next(dr) = u & (b21 = man & b11 = bx) & (b01 =flr) & (2-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = r & (b21 = man & b22 = bx) & (b23 = target) & (1+2 < n):flr;
+		next(dr) = u & (b21 = man & b11 = bx) & (b01 = target) & (2-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = r & (b21 = man & b22 = bxtrg) & (b23 =flr) & (1+2 < n):flr;
+		next(dr) = u & (b21 = man & b11 = bxtrg) & (b01 =flr) & (2-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = r & (b21 = man & b22 = bxtrg) & (b23 = target) & (1+2 < n):flr;
+		next(dr) = u & (b21 = man & b11 = bxtrg) & (b01 = target) & (2-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = r & (b21 = mantrg & b22 = bx) & (b23 =flr) & (1+2 < n): target;
+		next(dr) = u & (b21 = mantrg & b11 = bx) & (b01 =flr) & (2-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = r & (b21 = mantrg & b22 = bx) & (b23 = target) & (1+2 < n): target;
+		next(dr) = u & (b21 = mantrg & b11 = bx) & (b01 = target) & (2-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = r & (b21 = mantrg & b22 = bxtrg) & (b23 =flr) & (1+2 < n): target;
+		next(dr) = u & (b21 = mantrg & b11 = bxtrg) & (b01 =flr) & (2-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = r & (b21 = mantrg & b22 = bxtrg) & (b23 = target) & (1+2 < n): target;
+		next(dr) = u & (b21 = mantrg & b11 = bxtrg) & (b01 = target) & (2-2 > 0): target;
+
+    --man to floor
+        next(dr) = r & (b21 = flr & (b20 = man | b20 = mantrg)) : man;
+        next(dr) = l & (b21 = flr & (b22 = man | b22 = mantrg)): man;
+        next(dr) = d & (b21 = flr & (b11 = man | b11 = mantrg)): man;
+
+    --box to floor
+        next(dr) = l & (b21 = flr & (b22 = bx | b22 = bxtrg)) & (b23 = man | b23 = mantrg): bx;
+        next(dr) = d & (b21 = flr & (b11 = bx | b11 = bxtrg)) & (b01 = man | b01 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b21 = target & (b20 = man | b20 = mantrg)): mantrg;
+        next(dr) = l & (b21 = target & (b22 = man | b22 = mantrg)): mantrg;
+        next(dr) = d & (b21 = target & (b11 = man | b11 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = l & (b21 = target & (b22 = bx | b22 = bxtrg)) & (b23 = man | b23 = mantrg): bxtrg;
+        next(dr) = d & (b21 = target & (b11 = bx | b11 = bxtrg)) & (b01 = man | b01 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b21 = bx & (b20 = man | b20 = mantrg)) & (b22 = flr | b22 = target): man;
+        next(dr) = l & (b21 = bx & (b22 = man | b22 = mantrg)) & (b20 = flr | b20 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b21 = bxtrg & (b20 = man | b20 = mantrg)) & (b22 = flr | b22 = target): mantrg;
+        next(dr) = l & (b21 = bxtrg & (b22 = man | b22 = mantrg)) & (b20 = flr | b20 = target): mantrg;
+
+    TRUE: b21;
+esac;
+next(b22) := case
+	--floor to floor
+		next(dr) = l & (b22 = man & b21 =flr):flr;
+		next(dr) = r & (b22 = man & b23 =flr):flr;
+		next(dr) = u & (b22 = man & b12 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b22 = mantrg & b21 =flr): target;
+		next(dr) = r & (b22 = mantrg & b23 =flr): target;
+		next(dr) = u & (b22 = mantrg & b12 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b22 = man & b21 = target):flr;
+		next(dr) = r & (b22 = man & b23 = target):flr;
+		next(dr) = u & (b22 = man & b12 = target):flr;
+
+	--target to target
+		next(dr) = l & (b22 = mantrg & b21 = target): target;
+		next(dr) = r & (b22 = mantrg & b23 = target): target;
+		next(dr) = u & (b22 = mantrg & b12 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b22 = man & b21 = bx) & (b20 =flr) & (2-2 > 0):flr;
+		next(dr) = r & (b22 = man & b23 = bx) & (b24 =flr) & (2+2 < n):flr;
+		next(dr) = u & (b22 = man & b12 = bx) & (b02 =flr) & (2-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b22 = man & b21 = bx) & (b20 = target) & (2-2 > 0):flr;
+		next(dr) = r & (b22 = man & b23 = bx) & (b24 = target) & (2+2 < n):flr;
+		next(dr) = u & (b22 = man & b12 = bx) & (b02 = target) & (2-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b22 = man & b21 = bxtrg) & (b20 =flr) & (2-2 > 0):flr;
+		next(dr) = r & (b22 = man & b23 = bxtrg) & (b24 =flr) & (2+2 < n):flr;
+		next(dr) = u & (b22 = man & b12 = bxtrg) & (b02 =flr) & (2-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b22 = man & b21 = bxtrg) & (b20 = target) & (2-2 > 0):flr;
+		next(dr) = r & (b22 = man & b23 = bxtrg) & (b24 = target) & (2+2 < n):flr;
+		next(dr) = u & (b22 = man & b12 = bxtrg) & (b02 = target) & (2-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b22 = mantrg & b21 = bx) & (b20 =flr) & (2-2 > 0): target;
+		next(dr) = r & (b22 = mantrg & b23 = bx) & (b24 =flr) & (2+2 < n): target;
+		next(dr) = u & (b22 = mantrg & b12 = bx) & (b02 =flr) & (2-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b22 = mantrg & b21 = bx) & (b20 = target) & (2-2 > 0): target;
+		next(dr) = r & (b22 = mantrg & b23 = bx) & (b24 = target) & (2+2 < n): target;
+		next(dr) = u & (b22 = mantrg & b12 = bx) & (b02 = target) & (2-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b22 = mantrg & b21 = bxtrg) & (b20 =flr) & (2-2 > 0): target;
+		next(dr) = r & (b22 = mantrg & b23 = bxtrg) & (b24 =flr) & (2+2 < n): target;
+		next(dr) = u & (b22 = mantrg & b12 = bxtrg) & (b02 =flr) & (2-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = l & (b22 = mantrg & b21 = bxtrg) & (b20 = target) & (2-2 > 0): target;
+		next(dr) = r & (b22 = mantrg & b23 = bxtrg) & (b24 = target) & (2+2 < n): target;
+		next(dr) = u & (b22 = mantrg & b12 = bxtrg) & (b02 = target) & (2-2 > 0): target;
+
+    --man to floor
+        next(dr) = r & (b22 = flr & (b21 = man | b21 = mantrg)) : man;
+        next(dr) = l & (b22 = flr & (b23 = man | b23 = mantrg)): man;
+        next(dr) = d & (b22 = flr & (b12 = man | b12 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b22 = flr & (b21 = bx | b21 = bxtrg)) & (b20 = man | b20 = mantrg): bx;
+        next(dr) = l & (b22 = flr & (b23 = bx | b23 = bxtrg)) & (b24 = man | b24 = mantrg): bx;
+        next(dr) = d & (b22 = flr & (b12 = bx | b12 = bxtrg)) & (b02 = man | b02 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b22 = target & (b21 = man | b21 = mantrg)): mantrg;
+        next(dr) = l & (b22 = target & (b23 = man | b23 = mantrg)): mantrg;
+        next(dr) = d & (b22 = target & (b12 = man | b12 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b22 = target & (b21 = bx | b21 = bxtrg)) & (b20 = man | b20 = mantrg): bxtrg;
+        next(dr) = l & (b22 = target & (b23 = bx | b23 = bxtrg)) & (b24 = man | b24 = mantrg): bxtrg;
+        next(dr) = d & (b22 = target & (b12 = bx | b12 = bxtrg)) & (b02 = man | b02 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b22 = bx & (b21 = man | b21 = mantrg)) & (b23 = flr | b23 = target): man;
+        next(dr) = l & (b22 = bx & (b23 = man | b23 = mantrg)) & (b21 = flr | b21 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b22 = bxtrg & (b21 = man | b21 = mantrg)) & (b23 = flr | b23 = target): mantrg;
+        next(dr) = l & (b22 = bxtrg & (b23 = man | b23 = mantrg)) & (b21 = flr | b21 = target): mantrg;
+
+    TRUE: b22;
+esac;
+next(b23) := case
+	--floor to floor
+		next(dr) = l & (b23 = man & b22 =flr):flr;
+		next(dr) = r & (b23 = man & b24 =flr):flr;
+		next(dr) = u & (b23 = man & b13 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b23 = mantrg & b22 =flr): target;
+		next(dr) = r & (b23 = mantrg & b24 =flr): target;
+		next(dr) = u & (b23 = mantrg & b13 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b23 = man & b22 = target):flr;
+		next(dr) = r & (b23 = man & b24 = target):flr;
+		next(dr) = u & (b23 = man & b13 = target):flr;
+
+	--target to target
+		next(dr) = l & (b23 = mantrg & b22 = target): target;
+		next(dr) = r & (b23 = mantrg & b24 = target): target;
+		next(dr) = u & (b23 = mantrg & b13 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b23 = man & b22 = bx) & (b21 =flr) & (3-2 > 0):flr;
+		next(dr) = u & (b23 = man & b13 = bx) & (b03 =flr) & (2-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b23 = man & b22 = bx) & (b21 = target) & (3-2 > 0):flr;
+		next(dr) = u & (b23 = man & b13 = bx) & (b03 = target) & (2-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b23 = man & b22 = bxtrg) & (b21 =flr) & (3-2 > 0):flr;
+		next(dr) = u & (b23 = man & b13 = bxtrg) & (b03 =flr) & (2-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b23 = man & b22 = bxtrg) & (b21 = target) & (3-2 > 0):flr;
+		next(dr) = u & (b23 = man & b13 = bxtrg) & (b03 = target) & (2-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b23 = mantrg & b22 = bx) & (b21 =flr) & (3-2 > 0): target;
+		next(dr) = u & (b23 = mantrg & b13 = bx) & (b03 =flr) & (2-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b23 = mantrg & b22 = bx) & (b21 = target) & (3-2 > 0): target;
+		next(dr) = u & (b23 = mantrg & b13 = bx) & (b03 = target) & (2-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b23 = mantrg & b22 = bxtrg) & (b21 =flr) & (3-2 > 0): target;
+		next(dr) = u & (b23 = mantrg & b13 = bxtrg) & (b03 =flr) & (2-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = l & (b23 = mantrg & b22 = bxtrg) & (b21 = target) & (3-2 > 0): target;
+		next(dr) = u & (b23 = mantrg & b13 = bxtrg) & (b03 = target) & (2-2 > 0): target;
+
+    --man to floor
+        next(dr) = r & (b23 = flr & (b22 = man | b22 = mantrg)) : man;
+        next(dr) = l & (b23 = flr & (b24 = man | b24 = mantrg)): man;
+        next(dr) = d & (b23 = flr & (b13 = man | b13 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b23 = flr & (b22 = bx | b22 = bxtrg)) & (b21 = man | b21 = mantrg): bx;
+        next(dr) = d & (b23 = flr & (b13 = bx | b13 = bxtrg)) & (b03 = man | b03 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b23 = target & (b22 = man | b22 = mantrg)): mantrg;
+        next(dr) = l & (b23 = target & (b24 = man | b24 = mantrg)): mantrg;
+        next(dr) = d & (b23 = target & (b13 = man | b13 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b23 = target & (b22 = bx | b22 = bxtrg)) & (b21 = man | b21 = mantrg): bxtrg;
+        next(dr) = d & (b23 = target & (b13 = bx | b13 = bxtrg)) & (b03 = man | b03 = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b23 = bx & (b22 = man | b22 = mantrg)) & (b24 = flr | b24 = target): man;
+        next(dr) = l & (b23 = bx & (b24 = man | b24 = mantrg)) & (b22 = flr | b22 = target): man;
+
+    --man to box on target
+        next(dr) = r & (b23 = bxtrg & (b22 = man | b22 = mantrg)) & (b24 = flr | b24 = target): mantrg;
+        next(dr) = l & (b23 = bxtrg & (b24 = man | b24 = mantrg)) & (b22 = flr | b22 = target): mantrg;
+
+    TRUE: b23;
+esac;
+next(b24) := case
+	--floor to floor
+		next(dr) = l & (b24 = man & b23 =flr):flr;
+		next(dr) = u & (b24 = man & b14 =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b24 = mantrg & b23 =flr): target;
+		next(dr) = u & (b24 = mantrg & b14 =flr): target;
+
+	--floor to target
+		next(dr) = l & (b24 = man & b23 = target):flr;
+		next(dr) = u & (b24 = man & b14 = target):flr;
+
+	--target to target
+		next(dr) = l & (b24 = mantrg & b23 = target): target;
+		next(dr) = u & (b24 = mantrg & b14 = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b24 = man & b23 = bx) & (b22 =flr) & (4-2 > 0):flr;
+		next(dr) = u & (b24 = man & b14 = bx) & (b04 =flr) & (2-2 > 0):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b24 = man & b23 = bx) & (b22 = target) & (4-2 > 0):flr;
+		next(dr) = u & (b24 = man & b14 = bx) & (b04 = target) & (2-2 > 0):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b24 = man & b23 = bxtrg) & (b22 =flr) & (4-2 > 0):flr;
+		next(dr) = u & (b24 = man & b14 = bxtrg) & (b04 =flr) & (2-2 > 0):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b24 = man & b23 = bxtrg) & (b22 = target) & (4-2 > 0):flr;
+		next(dr) = u & (b24 = man & b14 = bxtrg) & (b04 = target) & (2-2 > 0):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b24 = mantrg & b23 = bx) & (b22 =flr) & (4-2 > 0): target;
+		next(dr) = u & (b24 = mantrg & b14 = bx) & (b04 =flr) & (2-2 > 0): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b24 = mantrg & b23 = bx) & (b22 = target) & (4-2 > 0): target;
+		next(dr) = u & (b24 = mantrg & b14 = bx) & (b04 = target) & (2-2 > 0): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b24 = mantrg & b23 = bxtrg) & (b22 =flr) & (4-2 > 0): target;
+		next(dr) = u & (b24 = mantrg & b14 = bxtrg) & (b04 =flr) & (2-2 > 0): target;
+
+	--target to box on target, target
+		next(dr) = l & (b24 = mantrg & b23 = bxtrg) & (b22 = target) & (4-2 > 0): target;
+		next(dr) = u & (b24 = mantrg & b14 = bxtrg) & (b04 = target) & (2-2 > 0): target;
+
+    --man to floor
+        next(dr) = r & (b24 = flr & (b23 = man | b23 = mantrg)) : man;
+        next(dr) = d & (b24 = flr & (b14 = man | b14 = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b24 = flr & (b23 = bx | b23 = bxtrg)) & (b22 = man | b22 = mantrg): bx;
+        next(dr) = d & (b24 = flr & (b14 = bx | b14 = bxtrg)) & (b04 = man | b04 = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b24 = target & (b23 = man | b23 = mantrg)): mantrg;
+        next(dr) = d & (b24 = target & (b14 = man | b14 = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b24 = target & (b23 = bx | b23 = bxtrg)) & (b22 = man | b22 = mantrg): bxtrg;
+        next(dr) = d & (b24 = target & (b14 = bx | b14 = bxtrg)) & (b04 = man | b04 = mantrg): bxtrg;
+
+    --man to box
+
+    --man to box on target
+
+    TRUE: b24;
+esac;
+LTLSPEC !F((b00 != bx) & (b01 != bx) & (b02 != bx) & (b03 != bx) & (b04 != bx) & (b10 != bx) & (b11 != bx) & (b12 != bx) & (b13 != bx) & (b14 != bx) & (b20 != bx) & (b21 != bx) & (b22 != bx) & (b23 != bx) & (b24 != bx));

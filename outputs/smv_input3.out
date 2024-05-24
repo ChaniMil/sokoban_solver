@@ -1,0 +1,27 @@
+*** This is nuXmv 2.0.0 (compiled on Mon Oct 14 18:05:39 2019)
+*** Copyright (c) 2014-2019, Fondazione Bruno Kessler
+*** For more information on nuXmv see https://nuxmv.fbk.eu
+*** or email to <nuxmv@list.fbk.eu>.
+*** Please report bugs at https://nuxmv.fbk.eu/bugs
+*** (click on "Login Anonymously" to access)
+*** Alternatively write to <nuxmv@list.fbk.eu>.
+
+*** This version of nuXmv is linked to NuSMV 2.6.0.
+*** For more information on NuSMV see <http://nusmv.fbk.eu>
+*** or email to <nusmv-users@list.fbk.eu>.
+*** Copyright (C) 2010-2019, Fondazione Bruno Kessler
+
+*** This version of nuXmv is linked to the CUDD library version 2.4.1
+*** Copyright (c) 1995-2004, Regents of the University of Colorado
+
+*** This version of nuXmv is linked to the MiniSat SAT solver. 
+*** See http://minisat.se/MiniSat.html
+*** Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+*** Copyright (c) 2007-2010, Niklas Sorensson
+
+*** This version of nuXmv is linked to MathSAT
+*** Copyright (C) 2009-2019 by Fondazione Bruno Kessler
+*** Copyright (C) 2009-2019 by University of Trento and others
+*** See http://mathsat.fbk.eu
+
+-- specification !( F ((((((((((((((((((((((((((((((((((((((((((((((((b00 != bx & b01 != bx) & b02 != bx) & b03 != bx) & b04 != bx) & b05 != bx) & b06 != bx) & b10 != bx) & b11 != bx) & b12 != bx) & b13 != bx) & b14 != bx) & b15 != bx) & b16 != bx) & b20 != bx) & b21 != bx) & b22 != bx) & b23 != bx) & b24 != bx) & b25 != bx) & b26 != bx) & b30 != bx) & b31 != bx) & b32 != bx) & b33 != bx) & b34 != bx) & b35 != bx) & b36 != bx) & b40 != bx) & b41 != bx) & b42 != bx) & b43 != bx) & b44 != bx) & b45 != bx) & b46 != bx) & b50 != bx) & b51 != bx) & b52 != bx) & b53 != bx) & b54 != bx) & b55 != bx) & b56 != bx) & b60 != bx) & b61 != bx) & b62 != bx) & b63 != bx) & b64 != bx) & b65 != bx) & b66 != bx))  is true

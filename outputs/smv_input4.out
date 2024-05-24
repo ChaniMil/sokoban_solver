@@ -1,0 +1,173 @@
+*** This is nuXmv 2.0.0 (compiled on Mon Oct 14 18:05:39 2019)
+*** Copyright (c) 2014-2019, Fondazione Bruno Kessler
+*** For more information on nuXmv see https://nuxmv.fbk.eu
+*** or email to <nuxmv@list.fbk.eu>.
+*** Please report bugs at https://nuxmv.fbk.eu/bugs
+*** (click on "Login Anonymously" to access)
+*** Alternatively write to <nuxmv@list.fbk.eu>.
+
+*** This version of nuXmv is linked to NuSMV 2.6.0.
+*** For more information on NuSMV see <http://nusmv.fbk.eu>
+*** or email to <nusmv-users@list.fbk.eu>.
+*** Copyright (C) 2010-2019, Fondazione Bruno Kessler
+
+*** This version of nuXmv is linked to the CUDD library version 2.4.1
+*** Copyright (c) 1995-2004, Regents of the University of Colorado
+
+*** This version of nuXmv is linked to the MiniSat SAT solver. 
+*** See http://minisat.se/MiniSat.html
+*** Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+*** Copyright (c) 2007-2010, Niklas Sorensson
+
+*** This version of nuXmv is linked to MathSAT
+*** Copyright (C) 2009-2019 by Fondazione Bruno Kessler
+*** Copyright (C) 2009-2019 by University of Trento and others
+*** See http://mathsat.fbk.eu
+
+-- specification !( F ((((((((((((((((((((((((((((((((((((((((((((((((b00 != bx & b01 != bx) & b02 != bx) & b03 != bx) & b04 != bx) & b05 != bx) & b06 != bx) & b10 != bx) & b11 != bx) & b12 != bx) & b13 != bx) & b14 != bx) & b15 != bx) & b16 != bx) & b20 != bx) & b21 != bx) & b22 != bx) & b23 != bx) & b24 != bx) & b25 != bx) & b26 != bx) & b30 != bx) & b31 != bx) & b32 != bx) & b33 != bx) & b34 != bx) & b35 != bx) & b36 != bx) & b40 != bx) & b41 != bx) & b42 != bx) & b43 != bx) & b44 != bx) & b45 != bx) & b46 != bx) & b50 != bx) & b51 != bx) & b52 != bx) & b53 != bx) & b54 != bx) & b55 != bx) & b56 != bx) & b60 != bx) & b61 != bx) & b62 != bx) & b63 != bx) & b64 != bx) & b65 != bx) & b66 != bx))  is false
+-- as demonstrated by the following execution sequence
+Trace Description: LTL Counterexample 
+Trace Type: Counterexample 
+  -> State: 1.1 <-
+    dr = s
+    i = 3
+    j = 3
+    right = FALSE
+    left = FALSE
+    down = FALSE
+    up = FALSE
+    b00 = wall
+    b01 = wall
+    b02 = wall
+    b03 = wall
+    b04 = wall
+    b05 = wall
+    b06 = wall
+    b10 = wall
+    b11 = wall
+    b12 = wall
+    b13 = target
+    b14 = wall
+    b15 = wall
+    b16 = wall
+    b20 = wall
+    b21 = wall
+    b22 = wall
+    b23 = bx
+    b24 = wall
+    b25 = wall
+    b26 = wall
+    b30 = wall
+    b31 = target
+    b32 = bx
+    b33 = man
+    b34 = bx
+    b35 = target
+    b36 = wall
+    b40 = wall
+    b41 = wall
+    b42 = wall
+    b43 = bx
+    b44 = wall
+    b45 = wall
+    b46 = wall
+    b50 = wall
+    b51 = wall
+    b52 = wall
+    b53 = target
+    b54 = wall
+    b55 = wall
+    b56 = wall
+    b60 = wall
+    b61 = wall
+    b62 = wall
+    b63 = wall
+    b64 = wall
+    b65 = wall
+    b66 = wall
+    n = 7
+    m = 7
+  -> State: 1.2 <-
+    dr = l
+    j = 2
+    right = TRUE
+    left = TRUE
+    down = TRUE
+    up = TRUE
+    b31 = bxtrg
+    b32 = man
+    b33 = flr
+  -> State: 1.3 <-
+    dr = r
+    j = 3
+    left = FALSE
+    down = FALSE
+    up = FALSE
+    b32 = flr
+    b33 = man
+  -> State: 1.4 <-
+    j = 4
+    left = TRUE
+    down = TRUE
+    up = TRUE
+    b33 = flr
+    b34 = man
+    b35 = bxtrg
+  -> State: 1.5 <-
+    dr = l
+    j = 3
+    right = FALSE
+    down = FALSE
+    up = FALSE
+    b33 = man
+    b34 = flr
+  -> State: 1.6 <-
+    dr = u
+    i = 2
+    right = TRUE
+    down = TRUE
+    up = TRUE
+    b13 = bxtrg
+    b23 = man
+    b33 = flr
+  -> State: 1.7 <-
+    dr = d
+    i = 3
+    right = FALSE
+    left = FALSE
+    up = FALSE
+    b23 = flr
+    b33 = man
+  -> State: 1.8 <-
+    i = 4
+    right = TRUE
+    left = TRUE
+    up = TRUE
+    b33 = flr
+    b43 = man
+    b53 = bxtrg
+  -- Loop starts here
+  -> State: 1.9 <-
+    dr = u
+    i = 3
+    right = FALSE
+    left = FALSE
+    down = FALSE
+    b33 = man
+    b43 = flr
+  -> State: 1.10 <-
+    dr = d
+    i = 4
+    right = TRUE
+    left = TRUE
+    down = TRUE
+    b33 = flr
+    b43 = man
+  -> State: 1.11 <-
+    dr = u
+    i = 3
+    right = FALSE
+    left = FALSE
+    down = FALSE
+    b33 = man
+    b43 = flr
