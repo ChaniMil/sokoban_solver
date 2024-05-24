@@ -1,0 +1,32 @@
+
+next(i) := case
+    next(dr) = u & i>0: i+(-1);
+    next(dr) = d & i<m+(-1): i+1;
+    TRUE: i;
+    esac;
+
+next(j) := case
+    next(dr) = l & j>0: j+(-1);
+    next(dr) = r & j<n+(-1): j+1;
+    TRUE: j;
+    esac;
+
+next(dr) := case
+    next(up) & next(down) & next(right) & next(left): {r, u, l, d};
+	next(up) & next(down) & next(right) & !next(left): {r, u, d};
+	next(up) & next(down) & !next(right) & next(left): {u, l, d};
+	next(up) & next(down) & !next(right) & !next(left): {u, d};
+	next(up) & !next(down) & next(right) & next(left): {r, u, l};
+	next(up) & !next(down) & next(right) & !next(left): {r, u};
+	next(up) & !next(down) & !next(right) & next(left): {u, l};
+	next(up) & !next(down) & !next(right) & !next(left): {u};
+	!next(up) & next(down) & next(right) & next(left): {r, l, d};
+	!next(up) & next(down) & next(right) & !next(left): {r, d};
+	!next(up) & next(down) & !next(right) & next(left): {l, d};
+	!next(up) & next(down) & !next(right) & !next(left): {d};
+	!next(up) & !next(down) & next(right) & next(left): {r, l};
+	!next(up) & !next(down) & next(right) & !next(left): {r};
+	!next(up) & !next(down) & !next(right) & next(left): {l};
+	TRUE: {s};
+esac;
+

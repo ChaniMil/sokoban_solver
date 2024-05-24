@@ -1,0 +1,113 @@
+
+next(b[i][j]) := case
+	--floor to floor
+		next(dr) = l & (b[i][j] = man & b[i][j-1] =flr):flr;
+		next(dr) = r & (b[i][j] = man & b[i][j+1] =flr):flr;
+		next(dr) = u & (b[i][j] = man & b[i-1][j] =flr):flr;
+		next(dr) = d & (b[i][j] = man & b[i+1][j] =flr):flr;
+
+
+	--target to floor
+		next(dr) = l & (b[i][j] = mantrg & b[i][j-1] =flr): target;
+		next(dr) = r & (b[i][j] = mantrg & b[i][j+1] =flr): target;
+		next(dr) = u & (b[i][j] = mantrg & b[i-1][j] =flr): target;
+		next(dr) = d & (b[i][j] = mantrg & b[i+1][j] =flr): target;
+
+	--floor to target
+		next(dr) = l & (b[i][j] = man & b[i][j-1] = target):flr;
+		next(dr) = r & (b[i][j] = man & b[i][j+1] = target):flr;
+		next(dr) = u & (b[i][j] = man & b[i-1][j] = target):flr;
+		next(dr) = d & (b[i][j] = man & b[i+1][j] = target):flr;
+
+	--target to target
+		next(dr) = l & (b[i][j] = mantrg & b[i][j-1] = target): target;
+		next(dr) = r & (b[i][j] = mantrg & b[i][j+1] = target): target;
+		next(dr) = u & (b[i][j] = mantrg & b[i-1][j] = target): target;
+		next(dr) = d & (b[i][j] = mantrg & b[i+1][j] = target): target;
+
+	--floor to box on floor, floor
+		next(dr) = l & (b[i][j] = man & b[i][j-1] = bx) & (b[i][j-2] =flr) & (j-2 > 0):flr;
+		next(dr) = r & (b[i][j] = man & b[i][j+1] = bx) & (b[i][j+2] =flr) & (j+2 < n):flr;
+		next(dr) = u & (b[i][j] = man & b[i-1][j] = bx) & (b[i-2][j] =flr) & (i-2 > 0):flr;
+		next(dr) = d & (b[i][j] = man & b[i+1][j] = bx) & (b[i+2][j] =flr) & (i+2 < m):flr;
+
+	--floor to box on floor, target
+		next(dr) = l & (b[i][j] = man & b[i][j-1] = bx) & (b[i][j-2] = target) & (j-2 > 0):flr;
+		next(dr) = r & (b[i][j] = man & b[i][j+1] = bx) & (b[i][j+2] = target) & (j+2 < n):flr;
+		next(dr) = u & (b[i][j] = man & b[i-1][j] = bx) & (b[i-2][j] = target) & (i-2 > 0):flr;
+		next(dr) = d & (b[i][j] = man & b[i+1][j] = bx) & (b[i+2][j] = target) & (i+2 < m):flr;
+
+	--floor to box on target, floor
+		next(dr) = l & (b[i][j] = man & b[i][j-1] = bxtrg) & (b[i][j-2] =flr) & (j-2 > 0):flr;
+		next(dr) = r & (b[i][j] = man & b[i][j+1] = bxtrg) & (b[i][j+2] =flr) & (j+2 < n):flr;
+		next(dr) = u & (b[i][j] = man & b[i-1][j] = bxtrg) & (b[i-2][j] =flr) & (i-2 > 0):flr;
+		next(dr) = d & (b[i][j] = man & b[i+1][j] = bxtrg) & (b[i+2][j] =flr) & (i-2 < m):flr;
+
+	--floor to box on target, target
+		next(dr) = l & (b[i][j] = man & b[i][j-1] = bxtrg) & (b[i][j-2] = target) & (j-2 > 0):flr;
+		next(dr) = r & (b[i][j] = man & b[i][j+1] = bxtrg) & (b[i][j+2] = target) & (j+2 < n):flr;
+		next(dr) = u & (b[i][j] = man & b[i-1][j] = bxtrg) & (b[i-2][j] = target) & (i-2 > 0):flr;
+		next(dr) = d & (b[i][j] = man & b[i+1][j] = bxtrg) & (b[i+2][j] = target) & (i+2 < m):flr;
+
+	--target to box on floor, floor
+		next(dr) = l & (b[i][j] = mantrg & b[i][j-1] = bx) & (b[i][j-2] =flr) & (j-2 > 0): target;
+		next(dr) = r & (b[i][j] = mantrg & b[i][j+1] = bx) & (b[i][j+2] =flr) & (j+2 < n): target;
+		next(dr) = u & (b[i][j] = mantrg & b[i-1][j] = bx) & (b[i-2][j] =flr) & (i-2 > 0): target;
+		next(dr) = d & (b[i][j] = mantrg & b[i+1][j] = bx) & (b[i+2][j] =flr) & (i+2 < m): target;
+
+	--target to box on floor, target
+		next(dr) = l & (b[i][j] = mantrg & b[i][j-1] = bx) & (b[i][j-2] = target) & (j-2 > 0): target;
+		next(dr) = r & (b[i][j] = mantrg & b[i][j+1] = bx) & (b[i][j+2] = target) & (j+2 < n): target;
+		next(dr) = u & (b[i][j] = mantrg & b[i-1][j] = bx) & (b[i-2][j] = target) & (i-2 > 0): target;
+		next(dr) = d & (b[i][j] = mantrg & b[i+1][j] = bx) & (b[i+2][j] = target) & (i+2 < m): target;
+
+	--target to box on target, floor
+		next(dr) = l & (b[i][j] = mantrg & b[i][j-1] = bxtrg) & (b[i][j-2] =flr) & (j-2 > 0): target;
+		next(dr) = r & (b[i][j] = mantrg & b[i][j+1] = bxtrg) & (b[i][j+2] =flr) & (j+2 < n): target;
+		next(dr) = u & (b[i][j] = mantrg & b[i-1][j] = bxtrg) & (b[i-2][j] =flr) & (i-2 > 0): target;
+		next(dr) = d & (b[i][j] = mantrg & b[i+1][j] = bxtrg) & (b[i+2][j] =flr) & (i+2 < m): target;
+
+	--target to box on target, target
+		next(dr) = l & (b[i][j] = mantrg & b[i][j-1] = bxtrg) & (b[i][j-2] = target) & (j-2 > 0): target;
+		next(dr) = r & (b[i][j] = mantrg & b[i][j+1] = bxtrg) & (b[i][j+2] = target) & (j+2 < n): target;
+		next(dr) = u & (b[i][j] = mantrg & b[i-1][j] = bxtrg) & (b[i-2][j] = target) & (i-2 > 0): target;
+		next(dr) = d & (b[i][j] = mantrg & b[i+1][j] = bxtrg) & (b[i+2][j] = target) & (i+2 < m): target;
+
+    --man to floor
+        next(dr) = r & (b[i][j] = flr & (b[i][j-1] = man | b[i][j-1] = mantrg)) : man;
+        next(dr) = l & (b[i][j] = flr & (b[i][j+1] = man | b[i][j+1] = mantrg)): man;
+        next(dr) = d & (b[i][j] = flr & (b[i-1][j] = man | b[i-1][j] = mantrg)): man;
+        next(dr) = u & (b[i][j] = flr & (b[i+1][j] = man | b[i+1][j] = mantrg)): man;
+
+    --box to floor
+        next(dr) = r & (b[i][j] = flr & (b[i][j-1] = bx | b[i][j-1] = bxtrg)) & (b[i][j-2] = man | b[i][j-2] = mantrg): bx;
+        next(dr) = l & (b[i][j] = flr & (b[i][j+1] = bx | b[i][j+1] = bxtrg)) & (b[i][j+2] = man | b[i][j+2] = mantrg): bx;
+        next(dr) = d & (b[i][j] = flr & (b[i-1][j] = bx | b[i-1][j] = bxtrg)) & (b[i-2][j] = man | b[i-2][j] = mantrg): bx;
+        next(dr) = u & (b[i][j] = flr & (b[i+1][j] = bx | b[i+1][j] = bxtrg)) & (b[i+2][j] = man | b[i+2][j] = mantrg): bx;
+
+    --man to target
+        next(dr) = r & (b[i][j] = target & (b[i][j-1] = man | b[i][j-1] = mantrg)): mantrg;
+        next(dr) = l & (b[i][j] = target & (b[i][j+1] = man | b[i][j+1] = mantrg)): mantrg;
+        next(dr) = d & (b[i][j] = target & (b[i-1][j] = man | b[i-1][j] = mantrg)): mantrg;
+        next(dr) = u & (b[i][j] = target & (b[i+1][j] = man | b[i+1][j] = mantrg)): mantrg;
+
+    --box to target
+        next(dr) = r & (b[i][j] = target & (b[i][j-1] = bx | b[i][j-1] = bxtrg)) & (b[i][j-2] = man | b[i][j-2] = mantrg): bxtrg;
+        next(dr) = l & (b[i][j] = target & (b[i][j+1] = bx | b[i][j+1] = bxtrg)) & (b[i][j+2] = man | b[i][j+2] = mantrg): bxtrg;
+        next(dr) = d & (b[i][j] = target & (b[i-1][j] = bx | b[i-1][j] = bxtrg)) & (b[i-2][j] = man | b[i-2][j] = mantrg): bxtrg;
+        next(dr) = u & (b[i][j] = target & (b[i+1][j] = bx | b[i+1][j] = bxtrg)) & (b[i+2][j] = man | b[i+2][j] = mantrg): bxtrg;
+
+    --man to box
+        next(dr) = r & (b[i][j] = bx & (b[i][j-1] = man | b[i][j-1] = mantrg)) & (b[i][j+1] = flr | b[i][j+1] = target): man;
+        next(dr) = l & (b[i][j] = bx & (b[i][j+1] = man | b[i][j+1] = mantrg)) & (b[i][j-1] = flr | b[i][j-1] = target): man;
+        next(dr) = d & (b[i][j] = bx & (b[i-1][j] = man | b[i-1][j] = mantrg)) & (b[i+1][j] = flr | b[i+1][j] = target): man;
+        next(dr) = u & (b[i][j] = bx & (b[i+1][j] = man | b[i+1][j] = mantrg)) & (b[i-1][j] = flr | b[i-1][j] = target): man;
+
+    --man to box on target
+        next(dr) = r & (b[i][j] = bxtrg & (b[i][j-1] = man | b[i][j-1] = mantrg)) & (b[i][j+1] = flr | b[i][j+1] = target): mantrg;
+        next(dr) = l & (b[i][j] = bxtrg & (b[i][j+1] = man | b[i][j+1] = mantrg)) & (b[i][j-1] = flr | b[i][j-1] = target): mantrg;
+        next(dr) = d & (b[i][j] = bxtrg & (b[i-1][j] = man | b[i-1][j] = mantrg)) & (b[i+1][j] = flr | b[i+1][j] = target): mantrg;
+        next(dr) = u & (b[i][j] = bxtrg & (b[i+1][j] = man | b[i+1][j] = mantrg)) & (b[i-1][j] = flr | b[i-1][j] = target): mantrg;
+
+    TRUE: b[i][j];
+esac;
