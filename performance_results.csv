@@ -1,4 +1,4 @@
-Model	    BDD Time (ses)	SAT Time (sec)
+Model	      BDD Time (sec)	SAT Time (sec)
 check1.smv	0.196417809	    0.10949254
 check2.smv	0.174276352	    1.934442282
 check3.smv	8.872117281	    190.4321761
