@@ -31,7 +31,7 @@ def main():
     # Open the output file in write mode
     with open(output_file, mode='w', newline='') as file:
         writer = csv.writer(file)
-        writer.writerow(["Model", "BDD Time (ses)", "SAT Time (sec)"])
+        writer.writerow(["Model", "BDD Time (sec)", "SAT Time (sec)"])
 
         # Loop through each model in the directory
         for model in os.listdir(model_dir):
